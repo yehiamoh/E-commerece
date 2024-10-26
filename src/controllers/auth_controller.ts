@@ -42,14 +42,11 @@ const prisma =new PrismaClient();
          return;
       }
       catch(error:any){
-         console.log(error);
-         if(error.code==="P2002"){
-           res.status(409).json({ message: "Email already exists" });
-         }else{
-           res.status(500).json({ message: "Internal server error", error: error.message });
-         }
-         return;
-         
+        console.log(error);
+        next(error);
       }
+   }
+   public static login :RequestHandler=async(req:Request,res:Response,next:NextFunction)=>{
+
    }
 }
