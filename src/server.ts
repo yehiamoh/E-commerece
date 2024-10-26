@@ -13,7 +13,7 @@ function start(){
       const app=express();
       app.use(bodyParser.json());
       app.use("/api/V0",authRouter);
-      app.get('/api/V0/dummy',(req,res)=>{
+      app.get('/',(req,res)=>{
          res.json({
             message:"for fady"
          });
