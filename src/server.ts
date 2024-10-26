@@ -7,27 +7,23 @@ import errorHandler from "./services/error_handler";
 dotenv.config();
 
 const port =process.env.PORT||8080;
+const app=express();
 
-function start(){
    try{
-      const app=express();
+      
       app.use(bodyParser.json());
       app.use("/api/V0",authRouter);
+      app.use(errorHandler);
       app.get('/',(req,res)=>{
          res.json({
-            message:"for fady"
-         });
+            message :"testing vercel"
+         })
       })
-
-
-
-      app.use(errorHandler);
-      app.listen(port,()=>{
+     /* app.listen(port,()=>{
          console.log(`server is running on port : ${port}`)
-      });
+      });*/
    }
    catch(error:any){
       console.log(`error in running server \n ${error.toString()}`)
    }
-}
-start();
+module.exports=app ;
