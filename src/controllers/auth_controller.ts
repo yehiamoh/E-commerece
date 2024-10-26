@@ -1,13 +1,12 @@
 import { PrismaClient,User,Role } from "@prisma/client";
-import { Request,Response,NextFunction } from "express";
+import { Request,Response,NextFunction, RequestHandler } from "express";
 import bcrypt from "bcrypt"
 import joi from "joi";
 
 const prisma =new PrismaClient();
 
  export class AuthController{
-   
-   public static async register(req:Request,res:Response,next:NextFunction){
+   public static register:RequestHandler=async(req:Request,res:Response,next):Promise<void>=>{
       const registerSchema =joi.object({
          name: joi.string().required(),
          email: joi.string().email().required(),
@@ -20,7 +19,8 @@ const prisma =new PrismaClient();
          const {name,email,password,address,phone,role}=req.body;
          const {error}=registerSchema.validate(req.body);
          if(error){
-            return res.status(400).json( {message: error.details[0].message} )
+             res.status(400).json( {message: error.details[0].message});
+             return;
          }
          const hashedPassword=await bcrypt.hash(password,10);
          const user= await prisma.user.create({
@@ -38,15 +38,17 @@ const prisma =new PrismaClient();
             email:user.email,
             password:user.password,
             role:user.role, 
-         })
+         });
+         return;
       }
       catch(error:any){
          console.log(error);
          if(error.code==="P2002"){
-          return res.status(409).json({ message: "Email already exists" });
+           res.status(409).json({ message: "Email already exists" });
          }else{
-          return res.status(500).json({ message: "Internal server error", error: error.message });
+           res.status(500).json({ message: "Internal server error", error: error.message });
          }
+         return;
          
       }
    }
